@@ -43,6 +43,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
       create: function (request, response, next) {
          FullValidationSchema(request.body).then(function(data){
+            data.password = app.models.crypto.encrypt(data.password);
+
             Account.create(data).then(ref => {
                data.id = ref.id;
                let token = sha512.hmac(secretKeygen, JSON.stringify(request.body));

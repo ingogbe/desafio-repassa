@@ -6,6 +6,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    var Account = app.controllers.account;
    var Rating = app.controllers.rating;
+   var Login = app.controllers.login;
 
    // Default
    app.get('/api/', function (request, response, next) {
@@ -30,6 +31,11 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    app.delete('/api/employee/:employeeId/rating/:ratingId/delete', RouteAuth, AdminOnly, Rating.delete);
    app.post('/api/employee/:employeeId/rating/:ratingId/update', RouteAuth, AdminOnly, Rating.update);
    app.get('/api/employee/:employeeId/rating/list/', RouteAuth, AdminAndSelfOnly, Rating.list);
+
+   // Login routes
+   app.post('/api/login', Login.login);
+   app.post('/api/logout', Login.logout);
+   app.post('/api/validate', Login.validate);
 
    // 404 Error
    app.use(function (request, response, next) {

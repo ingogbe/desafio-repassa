@@ -48,7 +48,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
             "type": "object",
             "$async": true,
             "additionalProperties": false,
-            "required": ["fullname", "role"],
+            "required": ["fullname", "role", "email", "password"],
             "properties": {
                "fullname": {
                   "title": "Full Name",
@@ -59,6 +59,17 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                   "title": "Full Name",
                   "type": "string",
                   "enum": ["admin", "employee"]
+               },
+               "email": {
+                  "title": "Email",
+                  "type": "string",
+                  "format": "email"
+               },
+               "password": {
+                  "title": "Password",
+                  "type": "string",
+                  //minimo 8 caracteres, 1 letra minuscula, 1 numero, 1 letra maiuscula, sem caracteres especiais
+                  "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
                }
             }
          }

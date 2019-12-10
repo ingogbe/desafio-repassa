@@ -30,7 +30,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 								fullname: data.fullname,
 								id: data.id,
 								expiration: date.getTime()
-							}, jwtSecret, {algorithm: 'HS256', expiresIn: login_data.keep ? '15d' : '2d'});
+							}, jwtSecret, {expiresIn: login_data.keep ? '15d' : '2d'});
 
 							return app.utils.responses.ok(response, jwt_token);
 						}

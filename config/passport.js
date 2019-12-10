@@ -4,13 +4,14 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    var JwtStrategy = require('passport-jwt').Strategy;
    var ExtractJwt = require('passport-jwt').ExtractJwt;
 
+   var jwt = require('jsonwebtoken');
+
    var jwtSecret = process.env.JWT_SECRET || "secret-jwt-185161181811";
    var accountsCollection = process.env.ACCOUNT_COLLECTION || "accounts";
 
-   var opts = {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: jwtSecret
-   }
+   var opts = {};
+   opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+   opts.secretOrKey = jwtSecret;
 
    passport.serializeUser(function (user, done) {
       done(null, user);
@@ -22,12 +23,11 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    passport.use(new BearerStrategy(
       function (token, done) {
-         console.log("bearer");
 
          let tokenEncrypted = app.models.crypto.encrypt(token);
 
          app.config.database.firestore.collection(accountsCollection).where("token", "==", tokenEncrypted).get().then(refs => {
-            if(refs.docs.length > 0){
+            if (refs.docs.length > 0) {
                let data = refs.docs[0].data();
                data.id = refs.docs[0].id;
 
@@ -37,7 +37,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                   data: data
                });
             }
-            else{
+            else {
                return done("Token invalid", false, {
                   status: 401,
                   message: "Unauthorized",
@@ -56,17 +56,15 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
 
-      console.log(jwt_payload);
-
-      if(jwt_payload.expiration){
-         if(jwt_payload.expiration <= new Date().getTime()){
+      if (jwt_payload.expiration) {
+         if (jwt_payload.expiration <= new Date().getTime()) {
             return done("Token expired", false, {
                status: 401,
                message: "Unauthorized",
                data: {}
             });
          }
-         else{
+         else {
             app.models.account.get(jwt_payload.id).then(ref => {
                if (ref.exists) {
                   let obj = ref.data();
@@ -92,7 +90,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
             });
          }
       }
-      else{
+      else {
          return done("Token expired", false, {
             status: 401,
             message: "Unauthorized",
@@ -106,8 +104,25 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
          session: false
       },
 
+      verify: (request, response, next) => {
+         if(request.headers.authorization){
+            let token = request.headers.authorization.split(" ");
+   
+            if(token[1]){
+               try {
+                  var decoded = jwt.verify(token[1], jwtSecret);
+                  console.log("Decoded:", decoded);
+               } catch (err) {
+                  console.error(err);
+               }
+            }
+         }
+
+         next();
+      },
+
       routeAuth: (request, response, next) => {
-         passport.authenticate(['bearer', 'jwt'], app.config.passport.options, function (err, user, info) {
+         passport.authenticate(['jwt', 'bearer'], app.config.passport.options, function (err, user, info) {
             if (err || !user) {
                return app.utils.responses.unauthorized(response, err, "Invalid token");
             }

@@ -14,6 +14,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
             if (ref.exists) {
                let obj = ref.data();
                delete obj.token;
+               delete obj.password;
                obj.id = ref.id;
                return app.utils.responses.ok(response, obj);
             } 
@@ -31,6 +32,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                let obj = ref.data();
                obj.token = app.models.crypto.decrypt(obj.token);
                obj.id = ref.id;
+               delete obj.password;
                return app.utils.responses.ok(response, obj);
             } 
             else {
@@ -104,6 +106,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                let o = item.data();
                o.id = item.id;
                delete o.token;
+               delete o.password;
                objs.push(o);
             });
 
@@ -120,6 +123,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                let o = item.data();
                o.id = item.id;
                delete o.token;
+               delete o.password;
                objs.push(o);
             });
 

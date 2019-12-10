@@ -35,7 +35,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    // Login routes
    app.post('/api/login', Login.login);
    app.post('/api/logout', Login.logout);
-   app.post('/api/validate', Login.validate);
+   app.get('/api/validate', RouteAuth, Login.validate);
 
    // 404 Error
    app.use(function (request, response, next) {

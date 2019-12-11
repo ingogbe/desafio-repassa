@@ -28,6 +28,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
       create: function (request, response, next) {
          IdAccountValidationSchema({id: request.params.employeeId}).then(function(data2){
             FullValidationSchema(request.body).then(function(data){
+               data.from = request.user.fullname;
+
                Rating.create(request.params.employeeId, data).then(ref => {
                   data.id = ref.id;
                   return app.utils.responses.ok(response, data);

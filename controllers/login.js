@@ -17,6 +17,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
             Login.get(login_data.email, login_data.password).then(ref => {
 					if(ref.docs.length > 0){
 						let data = ref.docs[0].data();
+						delete data.token;
+						delete data.password;
 						data.id = ref.docs[0].id;
 
 						let date = new Date();
@@ -32,7 +34,10 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 								expiration: date.getTime()
 							}, jwtSecret, {expiresIn: login_data.keep ? '15d' : '2d'});
 
-							return app.utils.responses.ok(response, jwt_token);
+							return app.utils.responses.ok(response, {
+								user: data,
+								login_token: jwt_token
+							});
 						}
 						catch (errToken) {
 							console.log(errToken);
@@ -56,7 +61,10 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 		},
 
 		validate: function(request, response, next){
-			return app.utils.responses.ok(response, {message: "Valid"});
+			delete request.user.token;
+			delete request.user.password;
+
+			return app.utils.responses.ok(response, request.user);
 		}
    }
 

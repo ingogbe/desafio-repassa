@@ -96,6 +96,66 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                }
             }
          }
+      },
+
+      fullLessMail: function () {
+         return {
+            "title": "Account Object",
+            "type": "object",
+            "$async": true,
+            "additionalProperties": false,
+            "required": ["fullname", "role", "email", "password"],
+            "properties": {
+               "fullname": {
+                  "title": "Full Name",
+                  "type": "string",
+                  "minLength": 10
+               },
+               "role": {
+                  "title": "Full Name",
+                  "type": "string",
+                  "enum": ["admin", "employee"]
+               },
+               "email": {
+                  "title": "Email",
+                  "type": "string",
+                  "format": "email"
+               },
+               "password": {
+                  "title": "Password",
+                  "type": "string",
+                  //minimo 8 caracteres, 1 letra minuscula, 1 numero, 1 letra maiuscula, sem caracteres especiais
+                  "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
+               }
+            }
+         }
+      },
+
+      withoutPassword: function () {
+         return {
+            "title": "Account Object",
+            "type": "object",
+            "$async": true,
+            "additionalProperties": false,
+            "required": ["fullname", "role", "email"],
+            "properties": {
+               "fullname": {
+                  "title": "Full Name",
+                  "type": "string",
+                  "minLength": 10
+               },
+               "role": {
+                  "title": "Full Name",
+                  "type": "string",
+                  "enum": ["admin", "employee"]
+               },
+               "email": {
+                  "title": "Email",
+                  "type": "string",
+                  "format": "email"
+               }
+            }
+         }
       }
    }
 }

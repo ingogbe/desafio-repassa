@@ -53,7 +53,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
       },
 
       increment: firestore.FieldValue.increment(1),
-      decrement: firestore.FieldValue.increment(-1)
+      decrement: firestore.FieldValue.increment(-1),
+      collection: accountsCollection
    }
 
 }

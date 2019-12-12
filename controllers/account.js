@@ -3,6 +3,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    var Account = app.models.account;
 
    var FullValidationSchema = ajv.compile(app.validation.account.full());
+   var FullLessMailValidationSchema = ajv.compile(app.validation.account.fullLessMail());
+   var WithoutPasswordValidationSchema = ajv.compile(app.validation.account.withoutPassword());
    var IdValidationSchema = ajv.compile(app.validation.account.id());
    var IdsValidationSchema = ajv.compile(app.validation.account.ids());
 
@@ -101,15 +103,52 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
       },
 
       update: function(request, response, next){
-         FullValidationSchema(request.body).then(function(data){
-            data.password = app.models.crypto.encrypt(data.password);
-            
+         var validation = null;
+
+         if(request.body.password === ""){
+            delete request.body.password;
+            validation = WithoutPasswordValidationSchema;
+         }
+         else{
+            validation = FullLessMailValidationSchema;
+         }
+
+         validation(request.body).then(function(data){
             IdValidationSchema({id: request.params.accountId}).then(function(data2){
-               Account.update(data, request.params.accountId).then(ref => {
-                  data.id = request.params.accountId;
-                  return app.utils.responses.ok(response, data);
-               }).catch(err3 => {
-                  return app.utils.responses.internalServerError(response, err3);
+               if(data.password) data.password = app.models.crypto.encrypt(data.password);
+
+               app.config.ajv.checkAttrIsFreeOrSame({
+                  collection: Account.collection,
+                  attr: "email",
+                  id: request.params.accountId
+               }, request.body.email).then(isSameFree => {
+                  if(isSameFree){
+                     Account.update(data, request.params.accountId).then(ref2 => {
+                        Account.get(request.params.accountId).then(ref => {
+                           if (ref.exists) {
+                              let obj = ref.data();
+                              delete obj.token;
+                              delete obj.password;
+                              obj.id = ref.id;
+                              return app.utils.responses.ok(response, obj);
+                           } 
+                           else {
+                              return app.utils.responses.notFound(response, request.params.accountId);
+                           }
+                        }).catch(err4 => {
+                           return app.utils.responses.internalServerError(response, err4);
+                        });
+                     }).catch(err3 => {
+                        return app.utils.responses.internalServerError(response, err3);
+                     });
+                  }
+                  else{
+                     return app.utils.responses.badRequest(response, {
+                        message: "E-mail isnt free to use"
+                     });
+                  }
+               }).catch(err5 => {
+                  console.error(err5);
                });
             }).catch(err2 => {
                return app.utils.responses.notFound(response, request.params.accountId);

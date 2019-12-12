@@ -25,7 +25,6 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                data = data.replace(/\(|\)|-|\s/g, "");
             } else if (schema.attr == "email") {
                data = data.replace(/\s/g, "");
-               data = data.toLowerCase();
             } else if (schema.attr == "cpf") {
                data = data.replace(/\s|-|\./g, "");
             }
@@ -43,6 +42,44 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
          }
 
 
+
+      } catch (err) {
+         return false
+      }
+   }
+
+   function checkAttrIsFreeOrSame(schema, data) {
+      try {
+
+         if (schema.attr == "phone") {
+            data = data.replace(/\(|\)|-|\s/g, "");
+         } else if (schema.attr == "email") {
+            data = data.replace(/\s/g, "");
+         } else if (schema.attr == "cpf") {
+            data = data.replace(/\s|-|\./g, "");
+         }
+
+         //return true or false if attr is free to use
+         return db.collection(schema.collection).where(schema.attr, "==", data).limit(1).get().then(doc => {
+            if (doc.size > 0) {
+               var ref = doc.docs[0].data();
+               ref.id = doc.docs[0].id;
+               
+               if(schema.id == ref.id){
+                  //same
+                  return true;
+               }
+               else{
+                  //not same not free
+                  return false
+               }
+            } else {
+               //free
+               return true;
+            }
+         }).catch(err => {
+            return false;
+         });
 
       } catch (err) {
          return false
@@ -101,5 +138,11 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
       type: ["string", "object"],
       validate: checkIfExists
    });
+
+   return {
+      checkAttrIsFreeOrSame: checkAttrIsFreeOrSame,
+      checkIfExists: checkIfExists,
+      checkAttrIsFree: checkAttrIsFree
+   }
 
 }

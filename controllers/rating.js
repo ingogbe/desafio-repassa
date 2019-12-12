@@ -84,12 +84,14 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
       update: function(request, response, next){
          IdAccountValidationSchema({id: request.params.employeeId}).then(function(accountId){
             FullValidationSchema(request.body).then(function(data){
+               data.from = request.user.fullname;
 
                var IdValidationSchema = ajv.compile(app.validation.rating.id(request.params.employeeId));
 
                IdValidationSchema({id: request.params.ratingId}).then(function(data2){
                   Rating.update(request.params.employeeId, request.params.ratingId, data).then(ref => {
                      data.id = request.params.ratingId;
+
                      return app.utils.responses.ok(response, data);
                   }).catch(err3 => {
                      return app.utils.responses.internalServerError(response, err3);

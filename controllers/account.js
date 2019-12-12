@@ -4,6 +4,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    var FullValidationSchema = ajv.compile(app.validation.account.full());
    var IdValidationSchema = ajv.compile(app.validation.account.id());
+   var IdsValidationSchema = ajv.compile(app.validation.account.ids());
 
    var sha512 = require('js-sha512').sha512;
    var secretKeygen = process.env.SECRET_KEYGEN || "secret-keygen-185161181811";
@@ -51,6 +52,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                data.id = ref.id;
                let token = sha512.hmac(secretKeygen, JSON.stringify(request.body));
                data.token = app.models.crypto.encrypt(token);
+               data.ratings = 0;
                delete data.id;
 
                Account.update(data, ref.id).then(ref2 => {
@@ -72,7 +74,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
          IdValidationSchema({id: request.params.accountId}).then(function(data){
             Account.delete(data.id).then(ref => {
                return app.utils.responses.ok(response, {
-                  id: request.params.accountId
+                  id: data.id
                });
             }).catch(err2 => {
                return app.utils.responses.internalServerError(response, err2);
@@ -82,8 +84,26 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
          });
       },
 
+      batchDelete: function(request, response, next){
+         IdsValidationSchema({ids: request.body.ids}).then(function(data){
+            Account.batchDelete(data.ids).then(ref => {
+               return app.utils.responses.ok(response, {
+                  ids: data.ids
+               });
+            }).catch(err2 => {
+               console.error(err2);
+               return app.utils.responses.internalServerError(response, err2);
+            });
+         }).catch(err => {
+            console.error(err);
+            return app.utils.responses.badRequest(response, err);
+         });
+      },
+
       update: function(request, response, next){
          FullValidationSchema(request.body).then(function(data){
+            data.password = app.models.crypto.encrypt(data.password);
+            
             IdValidationSchema({id: request.params.accountId}).then(function(data2){
                Account.update(data, request.params.accountId).then(ref => {
                   data.id = request.params.accountId;

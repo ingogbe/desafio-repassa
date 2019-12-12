@@ -21,6 +21,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    app.get('/api/account/:accountId/get', RouteAuth, AdminAndSelfOnly, Account.get);
    app.get('/api/account/:accountId/getWithToken', RouteAuth, AdminAndSelfOnly, Account.getWithToken);
    app.delete('/api/account/:accountId/delete', RouteAuth, AdminOnly, Account.delete);
+   app.post('/api/account/batch/delete', RouteAuth, AdminOnly, Account.batchDelete);
    app.post('/api/account/:accountId/update', RouteAuth, AdminOnly, Account.update);
    app.get('/api/account/list/employees', RouteAuth, AdminOnly, Account.listEmployees);
    app.get('/api/account/list/admins', RouteAuth, AdminOnly, Account.listAdmins);

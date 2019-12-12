@@ -42,6 +42,25 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
          }
       },
 
+      ids: function () {
+         return {
+            "title": "ID",
+            "type": "object",
+            "$async": true,
+            "additionalProperties": false,
+            "required": ["ids"],
+            "properties": {
+               "ids": {
+                  "title": "ID",
+                  "type": "array",
+                  "items": {
+                     "type": "string"
+                  }
+               }
+            }
+         }
+      },
+
       full: function () {
          return {
             "title": "Account Object",
@@ -63,7 +82,11 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                "email": {
                   "title": "Email",
                   "type": "string",
-                  "format": "email"
+                  "format": "email",
+                  "checkAttrIsFree": {
+                     "collection": process.env.ACCOUNT_COLLECTION || "accounts",
+                     "attr": "email"
+                  }
                },
                "password": {
                   "title": "Password",

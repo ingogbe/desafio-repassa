@@ -1,6 +1,7 @@
 module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    var Rating = app.models.rating;
+   var Account = app.models.account;
 
    var FullValidationSchema = ajv.compile(app.validation.rating.full());
    var IdAccountValidationSchema = ajv.compile(app.validation.account.id());
@@ -32,7 +33,15 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
                Rating.create(request.params.employeeId, data).then(ref => {
                   data.id = ref.id;
+
+                  Account.update({ratings: Account.increment}, request.params.employeeId).then(ref2 => {
+                     console.log("Increment rating")
+                  }).catch(err4 => {
+                     console.error(err4);
+                  });
+
                   return app.utils.responses.ok(response, data);
+                  
                }).catch(err3 => {
                   return app.utils.responses.internalServerError(response, err3);
                });
@@ -51,6 +60,13 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
             IdValidationSchema({id: request.params.ratingId}).then(function(data){
                Rating.delete(request.params.employeeId, request.params.ratingId).then(ref => {
+
+                  Account.update({ratings: Account.decrement}, request.params.employeeId).then(ref2 => {
+                     console.log("Increment rating")
+                  }).catch(err4 => {
+                     console.error(err4);
+                  });
+
                   return app.utils.responses.ok(response, {
                      id: request.params.ratingId
                   });

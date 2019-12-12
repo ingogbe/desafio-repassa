@@ -15,7 +15,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    firestore.settings(settings);
 
    return {
-      firestore: firestore
+      firestore: firestore,
+      firestoreRaw: firebaseAdmin.firestore
    }
 
 }

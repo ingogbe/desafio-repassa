@@ -1,9 +1,9 @@
 module.exports = function (app, firebaseAdmin, ajv, passport) {
    const crypto = require('crypto');
-   const algorithm = process.env.CIPHER_ALGORITHM || 'aes-192-cbc';
-   const secret = process.env.CIPHER_SECRET || "secret-keygen-185161181811";
-   const inputEncoding = process.env.CIPHER_INPUT_ENCODING || "utf8";
-   const outputEncoding = process.env.CIPHER_OUTPUT_ENCODING || "hex";
+   const algorithm = process.env.CIPHER_ALGORITHM || app.config.files.fallback.CIPHER_ALGORITHM;
+   const secret = process.env.CIPHER_SECRET || app.config.files.fallback.CIPHER_SECRET;
+   const inputEncoding = process.env.CIPHER_INPUT_ENCODING || app.config.files.fallback.CIPHER_INPUT_ENCODING;
+   const outputEncoding = process.env.CIPHER_OUTPUT_ENCODING || app.config.files.fallback.CIPHER_OUTPUT_ENCODING;
 
    return {
       encrypt: (value) => {

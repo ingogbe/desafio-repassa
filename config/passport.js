@@ -6,8 +6,8 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    var jwt = require('jsonwebtoken');
 
-   var jwtSecret = process.env.JWT_SECRET || "secret-jwt-185161181811";
-   var accountsCollection = process.env.ACCOUNT_COLLECTION || "accounts";
+   var jwtSecret = process.env.JWT_SECRET || app.config.files.fallback.JWT_SECRET;
+   var accountsCollection = process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION;
 
    var opts = {};
    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();

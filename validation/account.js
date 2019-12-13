@@ -14,7 +14,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                   "type": "string",
                   "minLength": 20,
                   "checkIfExists": {
-                     "collection": process.env.ACCOUNT_COLLECTION || "accounts",
+                     "collection": process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION,
                      "attr": "token"
                   }
                }
@@ -34,7 +34,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                   "title": "ID",
                   "type": "string",
                   "checkIfExists": {
-                     "collection": process.env.ACCOUNT_COLLECTION || "accounts",
+                     "collection": process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION,
                      "attr": "id"
                   }
                }
@@ -84,7 +84,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                   "type": "string",
                   "format": "email",
                   "checkAttrIsFree": {
-                     "collection": process.env.ACCOUNT_COLLECTION || "accounts",
+                     "collection": process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION,
                      "attr": "email"
                   }
                },

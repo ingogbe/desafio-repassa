@@ -5,9 +5,9 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    var FullValidationSchema = ajv.compile(app.validation.login.full());
 
    var jwt = require('jsonwebtoken');
-	var jwtSecret = process.env.JWT_SECRET || "secret-jwt-185161181811";
-	var expirationDays = process.env.SESSION_EXPIRATION_DAYS || 2;
-	var keepExpirationDays = process.env.SESSION_KEEP_EXPIRATION_DAYS || 15;
+	var jwtSecret = process.env.JWT_SECRET || app.config.files.fallback.JWT_SECRET;
+	var expirationDays = process.env.SESSION_EXPIRATION_DAYS || app.config.files.fallback.SESSION_EXPIRATION_DAYS;
+	var keepExpirationDays = process.env.SESSION_KEEP_EXPIRATION_DAYS || app.config.files.fallback.SESSION_KEEP_EXPIRATION_DAYS;
 
    return {
       login: function(request, response, next){

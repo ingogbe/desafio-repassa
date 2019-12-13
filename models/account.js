@@ -2,7 +2,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    var db = app.config.database.firestore;
    var firestore = app.config.database.firestoreRaw;
-   var accountsCollection = process.env.ACCOUNT_COLLECTION || "accounts";
+   var accountsCollection = process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION;
 
 
    return {

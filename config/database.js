@@ -1,7 +1,7 @@
 module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    firebaseAdmin.initializeApp({
-      credential: firebaseAdmin.credential.cert(app.config.files["desafio-repassa-firebase-adminsdk-v4jth-61f79bfb8c"]),
+      credential: firebaseAdmin.credential.cert(app.config.files["desafio-repassa-firebase"]),
       databaseURL: "https://desafio-repassa.firebaseio.com"
    });
 

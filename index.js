@@ -27,8 +27,8 @@ app.use(bodyParser.json());
 
 consign()
    .include('utils')
-   .then('validation')
    .then('config/files')
+   .then('validation')
 	.then('config/database.js')
 	.then('config')
 	.then('models')
@@ -36,10 +36,10 @@ consign()
 	.then('routes')
 	.into(app, firebaseAdmin, ajv, passport);
 
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || app.config.files.fallback.PORT;
 
 app.listen(port, function () {
-      console.log('Servidor rodando em http://localhost:%s', port);
+   console.log('Servidor rodando em http://localhost:%s', port);
 });
 
 module.exports = app;

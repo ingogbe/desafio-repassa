@@ -1,7 +1,7 @@
 module.exports = function (app, firebaseAdmin, ajv, passport) {
 
-   var allowed_origins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ["http://localhost:5000", "http://localhost:3000"];
-   var default_origin = process.env.DEFAULT_ORIGIN || "http://localhost:5000";
+   var allowed_origins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : app.config.files.fallback.ALLOWED_ORIGINS;
+   var default_origin = process.env.DEFAULT_ORIGIN || app.config.files.fallback.DEFAULT_ORIGIN;
    /* console.log(allowed_origins); */
 
 	//Allow all requests

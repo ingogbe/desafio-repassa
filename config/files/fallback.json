@@ -1,0 +1,15 @@
+{
+   "JWT_SECRET": "secret-jwt-185161181811",
+   "ACCOUNT_COLLECTION": "accounts",
+   "RATING_COLLECTION": "ratings",
+   "ALLOWED_ORIGINS": ["http://localhost:5000", "http://localhost:3000"],
+   "DEFAULT_ORIGIN": "http://localhost:5000",
+   "SECRET_KEYGEN": "secret-keygen-185161181811",
+   "SESSION_EXPIRATION_DAYS": 2,
+   "SESSION_KEEP_EXPIRATION_DAYS": 15,
+   "PORT": 5000,
+   "CIPHER_ALGORITHM": "aes-192-cbc",
+   "CIPHER_SECRET": "secret-keygen-185161181811",
+   "CIPHER_INPUT_ENCODING": "utf8",
+   "CIPHER_OUTPUT_ENCODING": "hex"
+}

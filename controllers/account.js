@@ -9,7 +9,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
    var IdsValidationSchema = ajv.compile(app.validation.account.ids());
 
    var sha512 = require('js-sha512').sha512;
-   var secretKeygen = process.env.SECRET_KEYGEN || "secret-keygen-185161181811";
+   var secretKeygen = process.env.SECRET_KEYGEN || app.config.files.fallback.SECRET_KEYGEN;
 
    return {
       get: function (request, response, next) {

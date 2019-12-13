@@ -2,8 +2,6 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    return {
       id: function (accountId) {
-         console.log((process.env.ACCOUNT_COLLECTION || "accounts") + "/" + accountId + "/" + (process.env.RATING_COLLECTION || "ratings"));
-         
          return {
             "title": "ID",
             "type": "object",
@@ -15,7 +13,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                   "title": "ID",
                   "type": "string",
                   "checkIfExists": {
-                     "collection": (process.env.ACCOUNT_COLLECTION || "accounts") + "/" + accountId + "/" + (process.env.RATING_COLLECTION || "ratings"),
+                     "collection": (process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION) + "/" + accountId + "/" + (process.env.RATING_COLLECTION || app.config.files.fallback.RATING_COLLECTION),
                      "attr": "id"
                   }
                }

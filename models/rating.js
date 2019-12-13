@@ -1,8 +1,8 @@
 module.exports = function (app, firebaseAdmin, ajv, passport) {
 
    var db = app.config.database.firestore;
-   var ratingsCollection = process.env.ACCOUNT_COLLECTION || "ratings";
-   var accountsCollection = process.env.ACCOUNT_COLLECTION || "accounts";
+   var ratingsCollection = process.env.RATING_COLLECTION || app.config.files.fallback.RATING_COLLECTION;
+   var accountsCollection = process.env.ACCOUNT_COLLECTION || app.config.files.fallback.ACCOUNT_COLLECTION;
 
    return {
       get: function (accountId, ratingId) {

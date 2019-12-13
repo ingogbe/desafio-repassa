@@ -1,3 +1,14 @@
 ## Desafio Repassa - NodeJS Back-End
 
-Coloquei os arquivos de configuração e `.env` no repositório por ele ser privado e também por ser somente um desafio e não algo em algum servidor de produção.
+1. Clonar repositório
+2. Executar comando `npm install` para instalar os modulos necessários
+3. Iniciar servidor com o comando `npm start` ou se tiver o `Nodemon` instalado, com `npm run dev`
+
+### Nodemon
+
+Para instalar o `Nodemon` é só executar o comando `npm install -g nodemon`
+
+### Observações
+
+- Inicializar Back-end antes do Front-end
+- Cheque se a porta `5000` utilizada por ele está liberada no Firewall

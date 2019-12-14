@@ -1,5 +1,8 @@
 module.exports = function (app, firebaseAdmin, ajv, passport) {
 
+   //minimo 8 caracteres, 1 letra minuscula ou minuscula, 1 numero, 1 caracteres especiais
+   const passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#\\-+=_$*()[\\]%^&])[A-Za-z\\d!@#\\-+=_$*()[\\]%^&]{8,}$";
+
    return {
       token: function () {
          return {
@@ -91,8 +94,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                "password": {
                   "title": "Password",
                   "type": "string",
-                  //minimo 8 caracteres, 1 letra minuscula, 1 numero, 1 letra maiuscula, sem caracteres especiais
-                  "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
+                  "pattern": passwordRegex
                }
             }
          }
@@ -124,8 +126,7 @@ module.exports = function (app, firebaseAdmin, ajv, passport) {
                "password": {
                   "title": "Password",
                   "type": "string",
-                  //minimo 8 caracteres, 1 letra minuscula, 1 numero, 1 letra maiuscula, sem caracteres especiais
-                  "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
+                  "pattern": passwordRegex
                }
             }
          }

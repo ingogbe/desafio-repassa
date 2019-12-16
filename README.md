@@ -13,3 +13,4 @@ Para instalar o `Nodemon` é só executar o comando `npm install -g nodemon`
 
 - Inicializar Back-end antes do Front-end
 - Cheque se a porta `5000` utilizada por ele está liberada no Firewall
+
